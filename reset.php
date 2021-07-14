@@ -44,15 +44,9 @@
                         one capital letter, no special characters and must be more than 8 characters";
                     } else {
                         $verifiedPassword = $password;
-                        echo $userId;
-                        echo $email;
-                        echo $verifiedPassword;
                         $hashedPassword = password_hash($verifiedPassword, PASSWORD_DEFAULT);
                         $reset = $_SESSION["email"];
                         $resetPassword->execute();
-                        echo $userId;
-                        echo $email;
-                        echo $hashedPassword;
                         session_unset();
                         session_destroy();
                         echo "You've successfully changed your data. You can now login:
