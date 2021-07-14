@@ -11,10 +11,13 @@ update.onclick = function () {
             if (rb.checked) {
                 var x = document.createElement("INPUT");
                 var y = document.createElement("TEXTAREA");
+                var w = document.createElement("INPUT");
                 x.setAttribute("type", "text");
-                x.setAttribute("name", "update");
+                x.setAttribute("name", "update-name");
                 y.setAttribute("type", "text");
                 y.setAttribute("name", "update-description");
+                w.setAttribute("type", "number");
+                w.setAttribute("name", "update-price");
                 x.value = rb.value;
                 var z = document.createElement("INPUT");
                 z.setAttribute("type", "submit");
@@ -23,6 +26,7 @@ update.onclick = function () {
                 let form = document.getElementById("radio-form");
                 form.appendChild(x);
                 form.appendChild(y);
+                form.appendChild(w);
                 form.appendChild(z);
                 break;
             } else {

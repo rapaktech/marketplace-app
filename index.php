@@ -151,5 +151,12 @@
         <input type="submit" name="signin-btn" id="signin-btn" value="Sign In Here">
         </form>
     </div>
+
+    <div class="reset" name="reset" id="reset">
+    <h3>Forgot Your Password? Reset Your Passsword Here</h3>
+        <form action="<?php echo htmlspecialchars("reset.php"); ?>" method="post">
+        <input type="submit" name="reset-btn" id="reset-btn" value="Reset Password">
+        </form>
+    </div>
 </body>
 </html>

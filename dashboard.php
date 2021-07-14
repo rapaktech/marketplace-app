@@ -19,8 +19,8 @@
 
 <?php
     // define variables and set to empty values
-    $itemNameErr = $itemDescriptionErr = "";
-    $itemName = $itemDescription ="";
+    $itemNameErr = $itemDescriptionErr = $itemPriceErr = "";
+    $itemName = $itemDescription = $itemPrice = "";
 
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['logout']) == true) {
         session_unset();
@@ -32,9 +32,12 @@
             $itemNameErr = "Input field cannot be empty";
         } else if (empty($_POST["item-description"])) {
             $itemDescriptionErr = "Input field cannot be empty";
+        } else if (empty($_POST["item-price"])) {
+            $itemPriceErr = "Input field cannot be empty";
         } else {
             $itemName = test_input($_POST["item-name"]);
             $itemDescription = test_input($_POST["item-description"]);
+            $itemPrice = test_input($_POST["item-price"]);
             $createItem->execute();
             echo "<h2>Item Added Successfully. Please refresh page to see your changes</h2>";
         }
@@ -44,13 +47,14 @@
         if (empty($_POST["radio"])) {
             echo "Select one of the radio buttons to update";
         } else {
-            if (empty($_POST["update"])) {
+            if (empty($_POST["update-name"])) {
                 echo "Update field cannot be empty. Please write something before you update";
             } else {
                 $itemName = $_POST["radio"];
                 $itemId = $userItems[$itemName][0];
                 $updatedItemDescription = test_input($_POST["update-description"]);
-                $updatedItemName = test_input($_POST["update"]);
+                $updatedItemName = test_input($_POST["update-name"]);
+                $updatedItemPrice = test_input($_POST["update-price"]);
                 $updateItem->execute();
                 echo "<h2>Update Successful. Please refresh page to see your changes</h2>";
             }
@@ -77,20 +81,20 @@
     function readUserItems () {
         global $conn, $email, $findItems, $userItems;
         $findItems->execute();
-        $findItems->bind_result($id, $name, $description);
+        $findItems->bind_result($id, $name, $description, $price);
         while ($findItems->fetch()) {
-            $userItems[$name] = [$id, $name, $description];
+            $userItems[$name] = [$id, $name, $description, $price];
         }
     }
 
     function readAllItems () {
         global $allItems, $conn;
-        $sql = "SELECT item_id, item_name, item_description FROM Items";
+        $sql = "SELECT item_id, item_name, item_description, item_price FROM Items";
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $allItems[$row["item_id"]] = [$row["item_id"], $row["item_name"], $row["item_description"]];
+                $allItems[$row["item_id"]] = [$row["item_id"], $row["item_name"], $row["item_description"], $row["item_price"]];
             }
             return true;
         } else {
@@ -134,6 +138,8 @@
             <span class="error">* <?php echo $itemNameErr; ?></span><br><br>
             <input type="text" name="item-description" value="" placeholder="Describe Item" required>
             <span class="error">* <?php echo $itemDescriptionErr; ?></span><br><br>
+            <input type="number" name="item-price" value="" placeholder="Price" required>
+            <span class="error">* <?php echo $itemPriceErr; ?></span><br><br>
             <input type="submit" name="submit" value="Add Item">
         </form>
     </div>
@@ -144,7 +150,7 @@
             <?php 
                 if (empty($userItems) == FALSE) {
                     foreach ($userItems as $key => $value) {
-                        echo "<input type=\"radio\" name=\"radio\" id=\"{$key}\" value=\"{$key}\"> <b>{$key}</b> <span name=\"{$value[2]}\">   - {$value[2]}</span>  <br><br>";
+                        echo "<input type=\"radio\" name=\"radio\" id=\"{$key}\" value=\"{$key}\"> <b>{$key}</b>  <span name=\"{$value[2]}\">   - {$value[2]}</span> <span name=\"{$value[3]}\">   - {$value[3]}</span>  <br><br>";
                     }
                 } else {
                     echo "No items added yet";
@@ -163,7 +169,8 @@
                 if (readAllItems()) {
                     foreach ($allItems as $key => $value) {
                         echo "<li><h4 name=\"{$value[1]}\">{$value[1]}</h4>
-                        <span name=\"{$value[2]}\">   - {$value[2]}</span></li>";
+                        <span name=\"{$value[2]}\">   - {$value[2]}</span>
+                        <span name=\"{$value[3]}\">   - {$value[3]}</span></li>";
                     }
                 } else {
                     echo "No items added yet";
