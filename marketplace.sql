@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 15, 2021 at 01:43 AM
+-- Generation Time: Jul 15, 2021 at 10:14 PM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.9
 
@@ -42,10 +42,7 @@ CREATE TABLE `items` (
 --
 
 INSERT INTO `items` (`item_id`, `item_name`, `item_description`, `item_price`, `item_time_added`, `item_last_updated`, `item_creator_email`) VALUES
-(3, 'cl', 'uvuzxy', 7, '2021-07-14 17:23:50', '2021-07-14 17:24:37', 'ezesinachijim@gmail.com'),
-(6, 'Omo', 'ggvsty', 8, '2021-07-14 17:29:12', '2021-07-14 17:29:12', 'jim@jimezesinachi.com'),
-(7, 'd', 'ev', 2147483647, '2021-07-14 17:29:26', '2021-07-14 17:29:26', 'jim@jimezesinachi.com'),
-(9, 'gcty', 'gfcs', 6, '2021-07-14 18:59:34', '2021-07-14 18:59:34', 'carl@stone.com');
+(1, 'Agba Wire Wire', 'Send Money Joor', 776, '2021-07-15 20:10:58', '2021-07-15 20:10:58', 'admin@jimmarketplace.com');
 
 -- --------------------------------------------------------
 
@@ -54,7 +51,7 @@ INSERT INTO `items` (`item_id`, `item_name`, `item_description`, `item_price`, `
 --
 
 CREATE TABLE `users` (
-  `user_id` int(16) UNSIGNED NOT NULL,
+  `user_num` int(16) UNSIGNED NOT NULL,
   `user_firstname` varchar(255) NOT NULL,
   `user_lastname` varchar(255) NOT NULL,
   `user_email` varchar(255) NOT NULL,
@@ -68,10 +65,8 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `user_firstname`, `user_lastname`, `user_email`, `user_password`, `user_reg_time`, `user_last_updated`, `user_enabled`) VALUES
-(1, 'Jim', 'Ezesinachi', 'ezesinachijim@gmail.com', '$2y$10$R4yNxEPrX/Ta638/vSEYguJEuNzoPyqYE0Dvv6y4FAVytSBnrUaoa', '2021-07-14 17:14:41', '2021-07-14 17:14:41', 1),
-(2, 'Jim', 'Ezesinachi', 'jim@jimezesinachi.com', '$2y$10$hexchFlaMjh7LFTJcqAP8u1S8A22mKG4lN/ckEmNKQi06IsOEtOiO', '2021-07-14 17:28:45', '2021-07-14 17:28:45', 1),
-(3, 'Valid', 'Man', 'carl@stone.com', '$2y$10$0lZZB8WxSvf2msp9Fpjt4u83M1JWa8.LXo/4HKJ0yw2BC/WnTw6G2', '2021-07-14 18:58:57', '2021-07-14 18:58:57', 1);
+INSERT INTO `users` (`user_num`, `user_firstname`, `user_lastname`, `user_email`, `user_password`, `user_reg_time`, `user_last_updated`, `user_enabled`) VALUES
+(1, 'The', 'Admin', 'admin@jimmarketplace.com', '$2y$10$2ARl/4smbF185U1FRL/kjep7JESyUyhnILaDyIBUr9YyAWharU.hu', '2021-07-15 20:10:36', '2021-07-15 20:10:36', 1);
 
 --
 -- Indexes for dumped tables
@@ -87,7 +82,7 @@ ALTER TABLE `items`
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`user_id`),
+  ADD PRIMARY KEY (`user_num`),
   ADD UNIQUE KEY `user_email` (`user_email`);
 
 --
@@ -98,13 +93,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
-  MODIFY `item_id` int(16) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `item_id` int(16) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(16) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `user_num` int(16) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
