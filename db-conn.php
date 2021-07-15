@@ -15,10 +15,10 @@
     VALUES (?, ?, ?, ?)");
     $createUser->bind_param("ssss", $firstName, $lastName, $email, $hashedPassword);
 
-    $findUser = $conn->prepare("SELECT user_id, user_firstname, user_password FROM Users WHERE user_email=?");
+    $findUser = $conn->prepare("SELECT user_num, user_firstname, user_password FROM Users WHERE user_email=?");
     $findUser->bind_param("s", $email);
 
-    $resetPassword = $conn->prepare("UPDATE Users SET user_password=? WHERE user_id=?");
+    $resetPassword = $conn->prepare("UPDATE Users SET user_password=? WHERE user_num=?");
     $resetPassword->bind_param("si", $hashedPassword, $userId);
 
     $createItem = $conn->prepare("INSERT INTO Items (item_name, item_description, item_price, item_creator_email) VALUES (?, ?, ?, ?)");

@@ -45,7 +45,6 @@
                     } else {
                         $verifiedPassword = $password;
                         $hashedPassword = password_hash($verifiedPassword, PASSWORD_DEFAULT);
-                        $reset = $_SESSION["email"];
                         $resetPassword->execute();
                         session_unset();
                         session_destroy();
