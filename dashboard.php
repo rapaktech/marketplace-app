@@ -7,12 +7,24 @@
     $userItems = [];
     $allItems = [];
     $itemId = false;
-    $id = $_SESSION["id"];
-    $name = $_SESSION["firstname"];
-    $email = $_SESSION["email"];
+    if (!empty($_SESSION["id"])) {
+        $id = $_SESSION["id"];
+    }
+
+    if (!empty($_SESSION["firstname"])) {
+        $name = $_SESSION["firstname"];
+    }
+
+    if (!empty($_SESSION["email"])) {
+        $email = $_SESSION["email"];
+    }
+    
     readAllItems();
     readUserItems();
-    echo "<h1>Welcome {$name}</h1>";
+
+    if (!empty($name)) {
+        echo "<h1>Welcome {$name}</h1>";
+    }
 ?>
 
 

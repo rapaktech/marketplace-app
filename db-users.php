@@ -16,9 +16,9 @@ $users = "CREATE TABLE Users (
     user_lastname VARCHAR (255) NOT NULL,
     user_email VARCHAR (255) NOT NULL UNIQUE KEY,
     user_password VARCHAR(255) NOT NULL,
-    user_reg_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    user_reg_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user_last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    user_enabled TINYINT (1) UNSIGNED NOT NULL DEFAULT '1'
+    user_enabled TINYINT (1) NOT NULL DEFAULT '1'
 )";
 
 if ($conn->query($users) === TRUE) {

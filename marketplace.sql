@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 15, 2021 at 10:14 PM
+-- Generation Time: Jul 16, 2021 at 04:31 AM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.9
 
@@ -42,7 +42,8 @@ CREATE TABLE `items` (
 --
 
 INSERT INTO `items` (`item_id`, `item_name`, `item_description`, `item_price`, `item_time_added`, `item_last_updated`, `item_creator_email`) VALUES
-(1, 'Agba Wire Wire', 'Send Money Joor', 776, '2021-07-15 20:10:58', '2021-07-15 20:10:58', 'admin@jimmarketplace.com');
+(1, 'Agba Wire Wire', 'dxtrd', 98, '2021-07-16 02:15:15', '2021-07-16 02:15:32', 'admin@jimmarketplace.com'),
+(3, 'tyty', 'iug8', 88, '2021-07-16 02:15:54', '2021-07-16 02:15:54', 'admin@jimmarketplace.com');
 
 -- --------------------------------------------------------
 
@@ -58,7 +59,7 @@ CREATE TABLE `users` (
   `user_password` varchar(255) NOT NULL,
   `user_reg_time` timestamp NOT NULL DEFAULT current_timestamp(),
   `user_last_updated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `user_enabled` tinyint(1) UNSIGNED NOT NULL DEFAULT 1
+  `user_enabled` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -66,7 +67,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_num`, `user_firstname`, `user_lastname`, `user_email`, `user_password`, `user_reg_time`, `user_last_updated`, `user_enabled`) VALUES
-(1, 'The', 'Admin', 'admin@jimmarketplace.com', '$2y$10$2ARl/4smbF185U1FRL/kjep7JESyUyhnILaDyIBUr9YyAWharU.hu', '2021-07-15 20:10:36', '2021-07-15 20:10:36', 1);
+(1, 'The', 'Admin', 'admin@jimmarketplace.com', '$2y$10$wSDs29IV9rxmp0/UZ3ZVNuYuJL6XKJkKsoyJk/nuVWRINDyQvtWQa', '2021-07-16 02:14:48', '2021-07-16 02:14:48', 1);
 
 --
 -- Indexes for dumped tables
@@ -93,7 +94,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
-  MODIFY `item_id` int(16) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `item_id` int(16) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `users`
