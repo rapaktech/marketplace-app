@@ -1,15 +1,19 @@
 <?php
 /* Modify $username, $password and $dbname variable to match your own */
 
-$servername = "localhost";
-$username = "root";
-$pass = "";
-$dbname = "marketplace";
-define('servername', 'localhost');
-define('username', 'root');
-define('pass', '');
-define('dbname', 'marketplace');
+$servername = getenv("SERVER_NAME");
+$username = getenv("DB_USERNAME");
+$pass = getenv("DB_PASSWORD");
+$dbname = getenv("DB_NAME");
+define('servername', getenv("SERVER_NAME"));
+define('username', getenv("DB_USERNAME"));
+define('pass', getenv("DB_PASSWORD"));
+define('dbname', getenv("DB_NAME"));
 $conn = new mysqli (servername, username, pass, dbname);
+
+if ($conn->connect_error) {
+    $conn = new mysqli (servername, username, pass, dbname);
+}
 
 
 $createUser = $conn->prepare("INSERT INTO Users (user_firstname, user_lastname, user_email, user_password) 

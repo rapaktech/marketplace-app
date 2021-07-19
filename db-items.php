@@ -2,12 +2,15 @@
     /* Run this file once to seed table into created database.
     Modify $username, $password and $dbname variable to match your own */
 
-    $servername = "localhost";
-    $username = "username";
-    $password = "password";
-    $dbname = "Marketplace";
-
-    $conn = new mysqli ($servername, $username, $password, $dbname);
+    $servername = getenv("SERVER_NAME");
+    $username = getenv("DB_USERNAME");
+    $pass = getenv("DB_PASSWORD");
+    $dbname = getenv("DB_NAME");
+    define('servername', getenv("SERVER_NAME"));
+    define('username', getenv("DB_USERNAME"));
+    define('pass', getenv("DB_PASSWORD"));
+    define('dbname', getenv("DB_NAME"));
+    $conn = new mysqli (servername, username, pass, dbname);
 
     if ($conn->connect_error) {
         die ("Connection failed: " . $conn->connect_error);
