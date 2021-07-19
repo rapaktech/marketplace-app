@@ -1,6 +1,7 @@
 {
     "name": "rapaktech/marketplace-app",
     "description": "A Virtual Marketplace, built in PHP",
+    "license": "proprietary",
     "require": {
         "csanquer/pdo-service-provider": "~1.1dev"
     }
