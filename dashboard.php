@@ -1,8 +1,8 @@
 <?php
-    session_start();
     if (isset($_SESSION["id"]) && isset($_SESSION["firstname"]) && isset($_SESSION["email"]) == FALSE) {
         die ("Please login to access this page");
     }
+    session_start();
     require "db-conn.php";
     $userItems = [];
     $allItems = [];
