@@ -12,6 +12,10 @@ session_start();
         .error {
             color: #FF0000;
         }
+
+        div {
+            padding-top: 50px;
+        }
     </style>
     <title>The Virtual Marketplace</title>
 </head>
@@ -94,9 +98,16 @@ session_start();
         </form>
     </div>
 
+    <div class="signin" name="signin" id="signin">
+        <h2>Sign In Here</h2>
+        <form action="<?php echo htmlspecialchars("login.php"); ?>" method="post">
+            <input type="submit" name="signin-btn" id="signin-btn" value="Sign In Here">
+        </form>
+    </div>
+
     <div class="signup" name="signup" id="signup">
         <h2>Or Sign Up Here</h2>
-        <form action="<?php echo htmlspecialchars("index.php"); ?>" method="post">
+        <form action="<?php echo htmlspecialchars("signup.php"); ?>" method="post">
             <input type="submit" name="signup-btn" id="signup-btn" value="Sign Up Here">
         </form>
     </div>

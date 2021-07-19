@@ -117,7 +117,7 @@
 
     <div class="signup" name="signup" id="signup">
     <h2>Not A User? Sign Up Here</h2>
-    <form action="<?php echo htmlspecialchars("index.php"); ?>" method="post">
+    <form action="<?php echo htmlspecialchars("signup.php"); ?>" method="post">
         <input type="submit" name="signup-btn" id="signup-btn" value="Sign Up Here">
     </form>
     </div>

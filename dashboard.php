@@ -139,7 +139,7 @@
 <body>
 
     <div class="logout" name="logout">
-        <form action="<?php echo htmlspecialchars("index.php"); ?>" method="post">
+        <form action="<?php echo htmlspecialchars("signup.php"); ?>" method="post">
             <input type="submit" name="logout" value="Logout Session">
         </form>
     </div>
