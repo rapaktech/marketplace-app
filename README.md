@@ -4,4 +4,4 @@ Merchants can sign up, post items for sale and view listed items posted by other
 
 Merchants can also edit and update information about products they posted, as well as delete items they posted.
 
-Find this project hosted at https://rapaktech.github.io/marketplace-app
+Find this project hosted at https://jim-marketplace.000webhostapp.com
