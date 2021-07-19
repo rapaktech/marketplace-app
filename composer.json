@@ -1,18 +1,7 @@
 {
-    "$schema": "https://json-schema.org/draft-04/schema#",
-    "title": "Package",
-    "type": "object",
-    "properties": {
-        "name": {
-            "composer/marketplace-app": "composer/marketplace-app"
-        },
-        "description": {
-            "type": "string",
-            "description": "A Virtual Marketplace, built in PHP."
-        },
-        
-        "require": {
-            "csanquer/pdo-service-provider": "~1.1dev"
-        }
+    "name": "rapaktech/marketplace-app",
+    "description": "A Virtual Marketplace, built in PHP",
+    "require": {
+        "csanquer/pdo-service-provider": "~1.1dev"
     }
 }
