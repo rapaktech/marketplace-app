@@ -87,12 +87,12 @@
                     /* Secure password hash. */
                     $hashedPassword = password_hash($verifiedPassword, PASSWORD_DEFAULT);
                     $createUser->execute();
-                    session_unset();
-                    session_destroy();
-                    echo "You've successfully registered your data. You can now login here: 
-                    <form action=\"login.php\" method=\"post\">
-                    <input type=\"submit\" name=\"signin-btn\" id=\"signin-btn\" value=\"Sign In Here\"></form>";
-                    echo "<br>";
+                    checkEmail();
+                    echo "<script>
+                        window.setTimeout(function() {
+                            window.location.href = 'dashboard.php';
+                        }, 100);
+                    </script>";
                 }
         }
     
@@ -109,6 +109,7 @@
             $findUser->bind_result($foundUser, $userFirstName, $hashedPassword);
             while ($findUser->fetch()) {
                 if ($foundUser) {
+                    $_SESSION["id"] = $foundUser;
                     return true;
                     break;
                 } else {

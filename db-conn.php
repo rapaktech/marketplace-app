@@ -1,6 +1,13 @@
 <?php
 /* Modify $username, $password and $dbname variable to match your own */
 
+require "dotenv-parser.php";
+
+use DevCoder\DotEnv;
+
+(new DotEnv(__DIR__ . '/.env'))->load();
+
+
 $servername = getenv("SERVER_NAME");
 $username = getenv("DB_USERNAME");
 $pass = getenv("DB_PASSWORD");
@@ -23,7 +30,7 @@ $createUser->bind_param("ssss", $firstName, $lastName, $email, $hashedPassword);
 $findUser = $conn->prepare("SELECT user_num, user_firstname, user_password FROM Users WHERE user_email=?");
 $findUser->bind_param("s", $email);
 
-function resetPass($hashed,$uId) {
+function resetPass($hashed, $uId) {
     $conn = new mysqli (servername, username, pass, dbname);
     $res = false;
     try {

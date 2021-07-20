@@ -68,10 +68,11 @@
                 $_SESSION["firstname"] = $firstName;
                 $_SESSION["lastname"] = $lastName;
                 $_SESSION["email"] = $email;
-                echo "You've successfully logged your data. Go to your dashboard here:
-                <form action=\"dashboard.php\" method=\"post\">
-                <input type=\"submit\" name=\"dashboard-btn\" id=\"dashboard-btn\" value=\"Go To Your Dashboard\"></form>";
-                echo "<br>";
+                echo "<script>
+                        window.setTimeout(function() {
+                            window.location.href = 'dashboard.php';
+                        }, 100);
+                </script>";
             }
         }
     
