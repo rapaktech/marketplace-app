@@ -73,7 +73,7 @@
 
                     // check if password only contains letters and whitespace
                     if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/",$password)) {
-                        $passwordErr = "Password must have at least one number, no special characters and must be more than 8 characters";
+                        $passwordErr = "Password must have at least one number, one capital letter, no special characters and must be more than 8 characters";
                     } else {
                         if ($password !== $verify) {
                             $verifyErr = "Both password fields must be the same";

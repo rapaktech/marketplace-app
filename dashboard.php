@@ -1,8 +1,10 @@
 <?php
-    if (isset($_SESSION["id"]) && isset($_SESSION["firstname"]) && isset($_SESSION["email"]) == FALSE) {
+    session_start();
+
+    if (!isset($_SESSION["id"]) || !isset($_SESSION["firstname"]) || !isset($_SESSION["email"])) {
         die ("Please login to access this page");
     }
-    session_start();
+    
     require "db-conn.php";
     $userItems = [];
     $allItems = [];
@@ -68,7 +70,11 @@
                 $updatedItemName = test_input($_POST["update-name"]);
                 $updatedItemPrice = test_input($_POST["update-price"]);
                 $updateItem->execute();
-                echo "<h2>Update Successful. Please refresh page to see your changes</h2>";
+                echo "<script>
+                        window.setTimeout(function() {
+                            window.location.href = 'dashboard.php';
+                        }, 100);
+                </script>";
             }
         }
     }
@@ -80,7 +86,11 @@
             $itemName = $_POST["radio"];
             $itemId = $userItems[$itemName][0];
             $deleteItem->execute();
-            echo "<h2>Delete Successful. Please refresh page to see your changes</h2>";
+            echo "<script>
+                        window.setTimeout(function() {
+                            window.location.href = 'dashboard.php';
+                        }, 100);
+            </script>";
         }
     }
 
