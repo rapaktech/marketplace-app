@@ -53,7 +53,11 @@
             $itemDescription = test_input($_POST["item-description"]);
             $itemPrice = test_input($_POST["item-price"]);
             $createItem->execute();
-            echo "<h2>Item Added Successfully. Please refresh page to see your changes</h2>";
+            echo "<script>
+                        window.setTimeout(function() {
+                            window.location.href = 'dashboard.php';
+                        }, 100);
+            </script>";
         }
     }
 
