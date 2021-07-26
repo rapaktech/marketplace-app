@@ -68,8 +68,7 @@
             if (empty($_POST["update-name"])) {
                 echo "Update field cannot be empty. Please write something before you update";
             } else {
-                $itemName = $_POST["radio"];
-                $itemId = $userItems[$itemName][0];
+                $itemId = $_POST["radio"];
                 $updatedItemDescription = test_input($_POST["update-description"]);
                 $updatedItemName = test_input($_POST["update-name"]);
                 $updatedItemPrice = test_input($_POST["update-price"]);
@@ -109,18 +108,18 @@
         $findItems->execute();
         $findItems->bind_result($id, $name, $description, $price);
         while ($findItems->fetch()) {
-            $userItems[$name] = [$id, $name, $description, $price];
+            $userItems[$id] = [$id, $name, $description, $price];
         }
     }
 
     function readAllItems () {
         global $allItems, $conn;
-        $sql = "SELECT item_id, item_name, item_description, item_price FROM Items";
+        $sql = "SELECT item_id, item_name, item_description, item_price, item_creator_email FROM Items";
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $allItems[$row["item_id"]] = [$row["item_id"], $row["item_name"], $row["item_description"], $row["item_price"]];
+                $allItems[$row["item_id"]] = [$row["item_id"], $row["item_name"], $row["item_description"], $row["item_price"], $row["item_creator_email"]];
             }
             return true;
         } else {
@@ -176,7 +175,7 @@
             <?php 
                 if (empty($userItems) == FALSE) {
                     foreach ($userItems as $key => $value) {
-                        echo "<input type=\"radio\" name=\"radio\" id=\"{$key}\" value=\"{$key}\" placeholder=\"{$value[2]}\" size=\"{$value[3]}\"> <b>{$key}</b>  <span name=\"{$value[2]}\">   - {$value[2]}</span> <span name=\"{$value[3]}\">   - {$value[3]}</span>  <br><br>";
+                        echo "<input type=\"radio\" name=\"radio\" id=\"{$value[1]}\" value=\"{$key}\" placeholder=\"{$value[2]}\" size=\"{$value[3]}\"> <b>{$value[1]}</b>  <span name=\"{$value[2]}\">   - {$value[2]}</span> <span name=\"{$value[3]}\">   - {$value[3]}</span>  <br><br>";
                     }
                 } else {
                     echo "No items added yet";
@@ -196,7 +195,8 @@
                     foreach ($allItems as $key => $value) {
                         echo "<li><h4 name=\"{$value[1]}\">{$value[1]}</h4>
                         <span name=\"{$value[2]}\">   - {$value[2]}</span>
-                        <span name=\"{$value[3]}\">   - {$value[3]}</span></li>";
+                        <span name=\"{$value[3]}\">   - {$value[3]}</span>
+                        <span name=\"{$value[4]}\">   - {$value[4]}</span></li>";
                     }
                 } else {
                     echo "No items added yet";
