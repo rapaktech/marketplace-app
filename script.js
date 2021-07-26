@@ -19,6 +19,8 @@ update.onclick = function () {
                 w.setAttribute("type", "number");
                 w.setAttribute("name", "update-price");
                 x.value = rb.value;
+                y.value = rb.placeholder;
+                w.value = rb.size;
                 var z = document.createElement("INPUT");
                 z.setAttribute("type", "submit");
                 z.setAttribute("name", "save");

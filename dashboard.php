@@ -176,7 +176,7 @@
             <?php 
                 if (empty($userItems) == FALSE) {
                     foreach ($userItems as $key => $value) {
-                        echo "<input type=\"radio\" name=\"radio\" id=\"{$key}\" value=\"{$key}\"> <b>{$key}</b>  <span name=\"{$value[2]}\">   - {$value[2]}</span> <span name=\"{$value[3]}\">   - {$value[3]}</span>  <br><br>";
+                        echo "<input type=\"radio\" name=\"radio\" id=\"{$key}\" value=\"{$key}\" placeholder=\"{$value[2]}\" size=\"{$value[3]}\"> <b>{$key}</b>  <span name=\"{$value[2]}\">   - {$value[2]}</span> <span name=\"{$value[3]}\">   - {$value[3]}</span>  <br><br>";
                     }
                 } else {
                     echo "No items added yet";
