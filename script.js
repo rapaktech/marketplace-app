@@ -1,7 +1,6 @@
 // Note this js file was purely used for front-end scripting, to make a textbox appear dynamically
 
 var form = document.getElementById("radio-form");
-const rbs = document.querySelectorAll('input[name="radio"]');
 const update = document.querySelector('#update-btn');
 var x = document.createElement("INPUT");
 var y = document.createElement("TEXTAREA");
@@ -17,7 +16,6 @@ y.setAttribute("name", "update-description");
 w.setAttribute("type", "number");
 w.setAttribute("name", "update-price");
 
-
 function handleClick(myRadio) {
     x.value = myRadio.id;
     y.value = myRadio.placeholder;
@@ -25,7 +23,6 @@ function handleClick(myRadio) {
 }
 
 update.addEventListener("click", updateFn);
-
 
 function updateFn () {
     form.appendChild(x);

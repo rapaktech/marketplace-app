@@ -2,6 +2,15 @@
     /* Run this file once to seed table into created database.
     Modify $username, $password and $dbname variable to match your own */
 
+
+    require "dotenv-parser.php";
+
+    use DevCoder\DotEnv;
+
+    (new DotEnv(__DIR__ . '/.env'))->load();
+
+    
+
     $servername = getenv("SERVER_NAME");
     $username = getenv("DB_USERNAME");
     $pass = getenv("DB_PASSWORD");
