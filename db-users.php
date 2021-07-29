@@ -29,6 +29,7 @@
 
     $users = "CREATE TABLE Users (
         user_num INT (16) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        user_phone VARCHAR (255) NOT NULL,
         user_firstname VARCHAR (255) NOT NULL,
         user_lastname VARCHAR (255) NOT NULL,
         user_email VARCHAR (255) NOT NULL UNIQUE KEY,

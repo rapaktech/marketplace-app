@@ -27,8 +27,8 @@
 <body>
     <?php
         require "db-conn.php";
-        $firstErr = $lastErr = $emailErr = $passwordErr = $verifyErr =  "";
-        $id = $firstName = $lastName = $email = $password = $verify = $verifiedPassword = $hashedPassword = '';
+        $firstErr = $lastErr = $emailErr = $phoneErr = $passwordErr = $verifyErr =  "";
+        $id = $firstName = $lastName = $email = $phone = $password = $verify = $verifiedPassword = $hashedPassword = '';
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if (!empty($_POST["signup-firstname"])) {
@@ -66,6 +66,16 @@
                         }
                     }
                 }
+
+                if (!empty($_POST["signup-phone"])) {
+                    $phone = test_input($_POST["signup-phone"]);
+                    // check if phone only contains numbers and whitespace
+                    if (!preg_match("/^(?=.*\d)[\d]{8,}$/",$phone)) {
+                        $phoneErr = "Phone Number must be at least 8 characters and include only numbers";
+                    } else {
+                        $_SESSION["phone"] = $phone;
+                    }
+                }
             
                 if (!empty($_POST["signup-password"]) && !empty($_POST["verify-password"])) {
                     $password = test_input($_POST["signup-password"]);
@@ -83,7 +93,7 @@
                     }
                 }
 
-                if ($_SESSION["firstname"] && $_SESSION["lastname"] && $_SESSION["email"] && $verifiedPassword) {
+                if ($_SESSION["firstname"] && $_SESSION["lastname"] && $_SESSION["email"] && $_SESSION["phone"] && $verifiedPassword) {
                     /* Secure password hash. */
                     $hashedPassword = password_hash($verifiedPassword, PASSWORD_DEFAULT);
                     $createUser->execute();
@@ -92,12 +102,12 @@
                     $firstName = $_SESSION["firstname"];
                     $email = $_SESSION["email"];
                     setcookie("jimmarketplaceuser[id]", "$id");
-                    setcookie("jimmarketplaceuser[firstname]", "$firstname");
+                    setcookie("jimmarketplaceuser[firstname]", "$firstName");
                     setcookie("jimmarketplaceuser[email]", "$email");
                     echo "<script>
                         window.setTimeout(function() {
                             window.location.href = 'dashboard.php';
-                        }, 100);
+                        }, 200);
                     </script>";
                 }
         }
@@ -140,6 +150,9 @@
         <label for="signup-email">Email: </label>
         <input type="text" name="signup-email" id="signup-email" placeholder="Your Email" value="<?php if(!empty($email)) { echo $email; } ?>" required>
         <span class="error">* <?php echo $emailErr;?></span><br><br>
+        <label for="signup-phone">Phone Number: </label>
+        <input type="number" name="signup-phone" id="signup-phone" placeholder="Your Phone Number" value="<?php if(!empty($phone)) { echo $phone; } ?>" required>
+        <span class="error">* <?php echo $phoneErr;?></span><br><br>
         <label for="signup-password">Password: </label>
         <input type="password" name="signup-password" id="signup-password" placeholder="Your Preferred Password" required>
         <span class="error">* <?php echo $passwordErr;?></span><br><br>

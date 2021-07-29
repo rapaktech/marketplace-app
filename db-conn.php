@@ -23,9 +23,9 @@ if ($conn->connect_error) {
 }
 
 
-$createUser = $conn->prepare("INSERT INTO Users (user_firstname, user_lastname, user_email, user_password) 
-    VALUES (?, ?, ?, ?)");
-$createUser->bind_param("ssss", $firstName, $lastName, $email, $hashedPassword);
+$createUser = $conn->prepare("INSERT INTO Users (user_firstname, user_lastname, user_email, user_phone, user_password) 
+    VALUES (?, ?, ?, ?, ?)");
+$createUser->bind_param("sssss", $firstName, $lastName, $email, $phone, $hashedPassword);
 
 $findUser = $conn->prepare("SELECT user_num, user_firstname, user_password FROM Users WHERE user_email=?");
 $findUser->bind_param("s", $email);
