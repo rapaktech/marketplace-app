@@ -64,10 +64,9 @@
             
 
             if (checkEmail() && $verify) {
-                $_SESSION["id"] = $id;
-                $_SESSION["firstname"] = $firstName;
-                $_SESSION["lastname"] = $lastName;
-                $_SESSION["email"] = $email;
+                setcookie("jimmarketplaceuser[id]", "$id");
+                setcookie("jimmarketplaceuser[firstname]", "$firstName");
+                setcookie("jimmarketplaceuser[email]", "$email");
                 echo "<script>
                         window.setTimeout(function() {
                             window.location.href = 'dashboard.php';

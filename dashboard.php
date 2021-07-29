@@ -1,31 +1,28 @@
 <?php
-    session_start();
-
-    if (!isset($_SESSION["id"]) || !isset($_SESSION["firstname"]) || !isset($_SESSION["email"])) {
+    if (!isset($_COOKIE["jimmarketplaceuser"])) {
         die ("Please login to access this page");
-    }
-    
-    require "db-conn.php";
-    $userItems = [];
-    $allItems = [];
-    $itemId = false;
-    if (!empty($_SESSION["id"])) {
-        $id = $_SESSION["id"];
-    }
+    } else {
+        require "db-conn.php";
+        $userItems = [];
+        $allItems = [];
+        $itemId = false;
 
-    if (!empty($_SESSION["firstname"])) {
-        $name = $_SESSION["firstname"];
-    }
+        foreach ($_COOKIE["jimmarketplaceuser"] as $key => $value) {
+            if ($key == "id") {
+                $id = $value;
+            } if ($key == "firstname") {
+                $firstName = $value;
+            } if ($key == "email") {
+                $email = $value;
+            }
+        }
+        
+        readAllItems();
+        readUserItems();
 
-    if (!empty($_SESSION["email"])) {
-        $email = $_SESSION["email"];
-    }
-    
-    readAllItems();
-    readUserItems();
-
-    if (!empty($name)) {
-        echo "<h1>Welcome {$name}</h1>";
+        if (!empty($firstName)) {
+            echo "<h1>Welcome {$firstName}</h1>";
+        }
     }
 ?>
 
@@ -37,8 +34,7 @@
     $itemName = $itemDescription = $itemPrice = "";
 
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['logout']) == true) {
-        session_unset();
-        session_destroy();
+        setcookie("jimmarketplaceuser", "", time() - 3600);
     }
 
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit']) == true) {

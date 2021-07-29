@@ -28,7 +28,7 @@
     <?php
         require "db-conn.php";
         $firstErr = $lastErr = $emailErr = $passwordErr = $verifyErr =  "";
-        $firstName = $lastName = $email = $password = $verify = $verifiedPassword = $hashedPassword = '';
+        $id = $firstName = $lastName = $email = $password = $verify = $verifiedPassword = $hashedPassword = '';
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if (!empty($_POST["signup-firstname"])) {
@@ -88,6 +88,12 @@
                     $hashedPassword = password_hash($verifiedPassword, PASSWORD_DEFAULT);
                     $createUser->execute();
                     checkEmail();
+                    $id = $_SESSION["id"];
+                    $firstName = $_SESSION["firstname"];
+                    $email = $_SESSION["email"];
+                    setcookie("jimmarketplaceuser[id]", "$id");
+                    setcookie("jimmarketplaceuser[firstname]", "$firstname");
+                    setcookie("jimmarketplaceuser[email]", "$email");
                     echo "<script>
                         window.setTimeout(function() {
                             window.location.href = 'dashboard.php';
