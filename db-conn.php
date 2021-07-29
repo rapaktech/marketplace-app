@@ -45,8 +45,8 @@ function resetPass($hashed, $uId) {
 }  
 
 
-$createItem = $conn->prepare("INSERT INTO Items (item_name, item_description, item_price, item_creator_email) VALUES (?, ?, ?, ?)");
-$createItem->bind_param("ssss", $itemName, $itemDescription, $itemPrice, $email);
+$createItem = $conn->prepare("INSERT INTO Items (item_name, item_description, item_price, item_creator_email, item_creator_phone) VALUES (?, ?, ?, ?, ?)");
+$createItem->bind_param("sssss", $itemName, $itemDescription, $itemPrice, $email, $phone);
 
 $findItems = $conn->prepare("SELECT item_id, item_name, item_description, item_price FROM Items WHERE item_creator_email=?");
 $findItems->bind_param("s", $email);

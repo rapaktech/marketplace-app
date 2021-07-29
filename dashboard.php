@@ -14,6 +14,8 @@
                 $firstName = $value;
             } if ($key == "email") {
                 $email = $value;
+            } if ($key == "phone") {
+                $phone = $value;
             }
         }
         
@@ -110,12 +112,12 @@
 
     function readAllItems () {
         global $allItems, $conn;
-        $sql = "SELECT item_id, item_name, item_description, item_price, item_creator_email FROM Items";
+        $sql = "SELECT item_id, item_name, item_description, item_price, item_creator_phone FROM Items";
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $allItems[$row["item_id"]] = [$row["item_id"], $row["item_name"], $row["item_description"], $row["item_price"], $row["item_creator_email"]];
+                $allItems[$row["item_id"]] = [$row["item_id"], $row["item_name"], $row["item_description"], $row["item_price"], $row["item_creator_phone"]];
             }
             return true;
         } else {

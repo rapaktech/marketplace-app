@@ -101,9 +101,12 @@
                     $id = $_SESSION["id"];
                     $firstName = $_SESSION["firstname"];
                     $email = $_SESSION["email"];
+                    $phone = $_SESSION["phone"];
                     setcookie("jimmarketplaceuser[id]", "$id");
                     setcookie("jimmarketplaceuser[firstname]", "$firstName");
                     setcookie("jimmarketplaceuser[email]", "$email");
+                    setcookie("jimmarketplaceuser[phone]", "$phone");
+
                     echo "<script>
                         window.setTimeout(function() {
                             window.location.href = 'dashboard.php';
