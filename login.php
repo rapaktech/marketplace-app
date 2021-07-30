@@ -83,20 +83,51 @@
         }
 
         function checkEmail () {
-            global $conn, $email, $id, $firstName, $hash, $findUser;
+            global $conn, $email, $id, $firstName, $password, $verifyHash, $hash, $findUser;
             $findUser->execute();
-            $findUser->bind_result($foundUser, $userFirstName, $hashedPassword);
+            $findUser->bind_result($foundUser, $userFirstName, $hashedPassword, $enabled, $verifyHash);
             while ($findUser->fetch()) {
-                if ($foundUser) {
+                if ($foundUser && $enabled == 1) {
                     $id = $foundUser;
                     $firstName = $userFirstName;
                     $hash = $hashedPassword;
                     return true;
                     break;
+                } else if ($foundUser && $enabled == 0) {
+                    try {
+                        sendEmail();
+                    } catch (\Throwable $th) {
+                        echo $th;
+                    }
+                    echo "Please check your email inbox for a verification inbox to verify your account";
                 } else {
                     continue;
                 }
             }
+        }
+
+        function sendEmail () {
+            global $email, $password, $verifyHash;
+            $to = $email;
+            $subject = "Verify Your Email For Jim's Virtual Marketplace";
+            $message = '
+            
+            Thanks for signing up!
+            Your account has been created with the following credentials:
+
+
+            Email Address: '.$email.'
+            Password: '.$password.'
+
+
+            Please click the link below to activate your account to start selling and buying on our marketplace:
+
+            http://localhost:4000/code/marketplace-app/verify.php?email='.$email.'&hash='.$verifyHash.'
+            
+            ';
+
+            $headers = 'From:noreply@jimezesinachi.com' . "\r\n";
+            mail($to, $subject, $message, $headers);
         }
     ?>
 

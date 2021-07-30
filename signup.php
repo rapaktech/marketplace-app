@@ -96,22 +96,16 @@
                 if ($_SESSION["firstname"] && $_SESSION["lastname"] && $_SESSION["email"] && $_SESSION["phone"] && $verifiedPassword) {
                     /* Secure password hash. */
                     $hashedPassword = password_hash($verifiedPassword, PASSWORD_DEFAULT);
+                    $verifyHash = md5(rand(0, 1000));
                     $createUser->execute();
                     checkEmail();
-                    $id = $_SESSION["id"];
-                    $firstName = $_SESSION["firstname"];
-                    $email = $_SESSION["email"];
-                    $phone = $_SESSION["phone"];
-                    setcookie("jimmarketplaceuser[id]", "$id");
-                    setcookie("jimmarketplaceuser[firstname]", "$firstName");
-                    setcookie("jimmarketplaceuser[email]", "$email");
-                    setcookie("jimmarketplaceuser[phone]", "$phone");
-
-                    echo "<script>
-                        window.setTimeout(function() {
-                            window.location.href = 'dashboard.php';
-                        }, 200);
-                    </script>";
+                    try {
+                        sendEmail();
+                    } catch (\Throwable $th) {
+                        echo $th;
+                    }
+                    echo "Your account has been created successfully. 
+                    Please go to your email inbox to verify your account";
                 }
         }
     
@@ -135,6 +129,31 @@
                     continue;
                 }
             }
+        }
+
+
+        function sendEmail () {
+            global $email, $verifiedPassword, $verifyHash;
+            $to = $email;
+            $subject = "Verify Your Email For Jim's Virtual Marketplace";
+            $message = '
+            
+            Thanks for signing up!
+            Your account has been created with the following credentials:
+
+
+            Email Address: '.$email.'
+            Password: '.$verifiedPassword.'
+
+
+            Please click the link below to activate your account to start selling and buying on our marketplace:
+
+            http://localhost:4000/verify.php?email='.$email.'&hash='.$verifyHash.'
+            
+            ';
+
+            $headers = 'From:noreply@jimezesinachi.com' . "\r\n";
+            mail($to, $subject, $message, $headers);
         }
     ?>
 

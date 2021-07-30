@@ -23,11 +23,11 @@ if ($conn->connect_error) {
 }
 
 
-$createUser = $conn->prepare("INSERT INTO Users (user_firstname, user_lastname, user_email, user_phone, user_password) 
-    VALUES (?, ?, ?, ?, ?)");
-$createUser->bind_param("sssss", $firstName, $lastName, $email, $phone, $hashedPassword);
+$createUser = $conn->prepare("INSERT INTO Users (user_firstname, user_lastname, user_email, user_phone, user_verify_hash, user_password) 
+    VALUES (?, ?, ?, ?, ?, ?)");
+$createUser->bind_param("ssssss", $firstName, $lastName, $email, $phone, $verifyHash, $hashedPassword);
 
-$findUser = $conn->prepare("SELECT user_num, user_firstname, user_password FROM Users WHERE user_email=?");
+$findUser = $conn->prepare("SELECT user_num, user_firstname, user_password, user_enabled, user_verify_hash FROM Users WHERE user_email=?");
 $findUser->bind_param("s", $email);
 
 function resetPass($hashed, $uId) {
