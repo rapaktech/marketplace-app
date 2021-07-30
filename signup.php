@@ -119,7 +119,7 @@
         function checkEmail () {
             global $conn, $email, $findUser;
             $findUser->execute();
-            $findUser->bind_result($foundUser, $userFirstName, $hashedPassword);
+            $findUser->bind_result($foundUser, $userFirstName, $hashedPassword, $enabled, $verifyHash);
             while ($findUser->fetch()) {
                 if ($foundUser) {
                     $_SESSION["id"] = $foundUser;
