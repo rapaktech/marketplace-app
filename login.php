@@ -94,12 +94,8 @@
                     return true;
                     break;
                 } else if ($foundUser && $enabled == 0) {
-                    try {
-                        sendEmail();
-                    } catch (\Throwable $th) {
-                        echo $th;
-                    }
-                    echo "Please check your email inbox for a verification inbox to verify your account";
+                    echo "<h3>You haven't verified your account. Please check your email inbox for a verification email</h3>";
+                    break;
                 } else {
                     continue;
                 }
@@ -126,8 +122,8 @@
             
             ';
 
-            $headers = 'From:noreply@jimezesinachi.com' . "\r\n";
-            mail($to, $subject, $message, $headers);
+            $headers = 'From:jim@jimezesinachi.com' . "\r\n";
+            return mail($to, $subject, $message, $headers);
         }
     ?>
 

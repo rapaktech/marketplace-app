@@ -100,12 +100,15 @@
                     $createUser->execute();
                     checkEmail();
                     try {
-                        sendEmail();
+                        $sent = sendEmail();
                     } catch (\Throwable $th) {
                         echo $th;
+                    } finally {
+                        if ($sent) {
+                            echo "<h3>Your account has been created successfully. 
+                    Please go to your email inbox to verify your account<h3>";
+                        }
                     }
-                    echo "Your account has been created successfully. 
-                    Please go to your email inbox to verify your account";
                 }
         }
     
@@ -152,8 +155,8 @@
             
             ';
 
-            $headers = 'From:noreply@jimezesinachi.com' . "\r\n";
-            mail($to, $subject, $message, $headers);
+            $headers = 'From:jim@jimezesinachi.com' . "\r\n";
+            return mail($to, $subject, $message, $headers);
         }
     ?>
 
@@ -195,7 +198,7 @@
     </div>
 
     <div class="reset" name="reset" id="reset">
-    <h3>Forgot Your Password? Reset Your Passsword Here</h3>
+    <h3>Forgot Your Password? Reset Your Password Here</h3>
         <form action="<?php echo htmlspecialchars("reset.php"); ?>" method="post">
         <input type="submit" name="reset-btn" id="reset-btn" value="Reset Password">
         </form>
