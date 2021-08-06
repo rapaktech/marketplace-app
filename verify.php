@@ -7,7 +7,7 @@
 
         $update = verifyAndUpdate($verifyEmail, $verifyHash);
 
-        if ($update == true) {
+        if ($update === true) {
             echo '<div class="statusmsg">Your account has been activated, you can now login <a href=login.php>here</a>';
         } else {
             echo $update;

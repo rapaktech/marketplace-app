@@ -23,7 +23,7 @@ if ($conn->connect_error) {
 }
 
 
-$createUser = $conn->prepare("INSERT INTO Users (user_firstname, user_lastname, user_email, user_phone, user_verify_hash, user_password, user_enabled) 
+$createUser = $conn->prepare("INSERT INTO Users (user_firstname, user_lastname, user_email, user_phone, user_verify_hash, user_password) 
     VALUES (?, ?, ?, ?, ?, ?)");
 $createUser->bind_param("ssssss", $firstName, $lastName, $email, $phone, $verifyHash, $hashedPassword);
 
@@ -31,7 +31,7 @@ $findUser = $conn->prepare("SELECT user_num, user_firstname, user_password, user
 $findUser->bind_param("s", $email);
 
 function resetPass($hashed, $uId) {
-    $conn = new mysqli (servername, username, pass, dbname);
+    global $conn;
     $res = false;
     try {
         $resetPassword = $conn->prepare("UPDATE Users SET user_password=? WHERE user_num=?");
@@ -46,24 +46,28 @@ function resetPass($hashed, $uId) {
 
 
 function verifyAndUpdate($e, $v) {
-    $conn = new mysqli (servername, username, pass, dbname);
+    global $conn;
     $res = false;
-    $num = 1;
     try {
         $verifyUser = $conn->prepare("SELECT user_num, user_enabled FROM Users WHERE user_email=? AND user_verify_hash=?");
         $verifyUser->bind_param("ss", $e, $v);
 
-        $updateUser = $conn->prepare("UPDATE Users SET user_enabled=? WHERE user_email=?");
-        $updateUser->bind_param("is", $num, $e);
+        $updateUser = $conn->prepare("UPDATE Users SET user_enabled='1' WHERE user_num=?");
+        $updateUser->bind_param("i", $id);
 
         $verifyUser->execute();
         $verifyUser->bind_result($foundVerifyUser, $userEnabled);
 
         while ($verifyUser->fetch()) {
-            if ($foundVerifyUser && $userEnabled === 0) {
+            if ($foundVerifyUser && $userEnabled == '0') {
+                $id = $foundVerifyUser;
+                $sql = "UPDATE Users SET user_enabled='1' WHERE user_num=$id";
+                $result = $conn->query($sql);
                 $updateUser->execute();
+                $res = true;
+                return $res;
                 break;
-            } else if ($foundVerifyUser && $userEnabled === 1) {
+            } else if ($foundVerifyUser && $userEnabled == '1') {
                 echo '<div class="statusmsg">You account has already been activated with this link before. 
                 Please login <a href=login.php>here</a>';
                 break;
@@ -71,8 +75,6 @@ function verifyAndUpdate($e, $v) {
                 continue;
             }
         }
-
-        $res = true;
     } catch (PDOException $e) {
         $res = $e->getMessage();
     }

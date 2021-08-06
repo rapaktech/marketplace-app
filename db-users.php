@@ -35,9 +35,9 @@
         user_email VARCHAR (255) NOT NULL UNIQUE KEY,
         user_password VARCHAR(255) NOT NULL,
         user_verify_hash VARCHAR(255) NOT NULL,
+        user_enabled VARCHAR (1) NOT NULL DEFAULT '0',
         user_reg_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        user_last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        user_enabled TINYINT (1) NOT NULL DEFAULT 0
+        user_last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     )";
 
     if ($conn->query($users) === TRUE) {

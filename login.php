@@ -51,19 +51,19 @@
             if (isset($_POST["login-password"])) {
                 $password = test_input($_POST["login-password"]);
                 // check if password only contains letters and whitespace
-                if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/",$password)) {
+                if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/", $password)) {
                     $passwordErr = "Password must have at least one number, 
-                    one capital letter, no special characters and must be more than 8 characters";
+                    one capital letter, one small letter, no special characters and must be at least 8 characters in total<br>";
                 } else {
                     $verify = password_verify($password, $hash);
-                    if (!$verify) {
+                    if (!checkEmail() && !$verify) {
                         echo "Password is incorrect. Please check and try again<br>";
                     }
                 }
             }
             
 
-            if (checkEmail() && $verify) {
+            if (checkEmail() && $verify && $userEnabled == '1') {
                 setcookie("jimmarketplaceuser[id]", "$id");
                 setcookie("jimmarketplaceuser[firstname]", "$firstName");
                 setcookie("jimmarketplaceuser[email]", "$email");
@@ -72,6 +72,9 @@
                             window.location.href = 'dashboard.php';
                         }, 100);
                 </script>";
+            } else {
+                echo "<h3>You haven't verified your account. 
+                Please check your email inbox for a verification email</h3>";
             }
         }
     
@@ -83,23 +86,33 @@
         }
 
         function checkEmail () {
-            global $conn, $email, $id, $firstName, $password, $verifyHash, $hash, $findUser;
+            global $conn, $email, $id, $firstName, $password, $verifyHash, $userEnabled, $hash, $findUser;
             $findUser->execute();
             $findUser->bind_result($foundUser, $userFirstName, $hashedPassword, $enabled, $verifyHash);
             while ($findUser->fetch()) {
-                if ($foundUser && $enabled == 1) {
-                    $id = $foundUser;
-                    $firstName = $userFirstName;
-                    $hash = $hashedPassword;
-                    return true;
-                    break;
-                } else if ($foundUser && $enabled == 0) {
-                    echo "<h3>You haven't verified your account. Please check your email inbox for a verification email</h3>";
-                    break;
+                if ($foundUser) {
+                    if ($foundUser && $enabled == '1') {
+                        $id = $foundUser;
+                        $firstName = $userFirstName;
+                        $hash = $hashedPassword;
+                        $userEnabled = $enabled;
+                        return true;
+                        break;
+                    } else if ($foundUser && $enabled == '0') {
+                        try {
+                            sendEmail();
+                        } catch (\Throwable $th) {
+                            $catch = $th;
+                        } finally {
+                            return true;
+                        }
+                        break;
+                    }
                 } else {
                     continue;
                 }
             }
+            return false;
         }
 
         function sendEmail () {

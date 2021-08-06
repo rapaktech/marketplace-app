@@ -82,8 +82,9 @@
                     $verify = test_input($_POST["verify-password"]);
 
                     // check if password only contains letters and whitespace
-                    if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/",$password)) {
-                        $passwordErr = "Password must have at least one number, one capital letter, no special characters and must be more than 8 characters";
+                    if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/", $password)) {
+                        $passwordErr = "Password must have at least one number, 
+                        one capital letter, one small letter, no special characters and must be at least 8 characters in total<br>";
                     } else {
                         if ($password !== $verify) {
                             $verifyErr = "Both password fields must be the same";
@@ -106,7 +107,12 @@
                     } finally {
                         if ($sent) {
                             echo "<h3>Your account has been created successfully. 
-                    Please go to your email inbox to verify your account<h3>";
+                            Please go to your email inbox to verify your account<h3>";
+                        } else {
+                            echo "<h3>Your account has been created successfully, 
+                            but a verification email can't be sent to you at the moment.
+                            Please try to login <a href=\"login.php\">here</a> at some other time to get your verification email sent to 
+                            your email inbox<h3>";
                         }
                     }
                 }
