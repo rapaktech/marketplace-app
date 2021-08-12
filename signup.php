@@ -128,10 +128,9 @@
         function checkEmail () {
             global $conn, $email, $findUser;
             $findUser->execute();
-            $findUser->bind_result($foundUser, $userFirstName, $hashedPassword, $enabled, $verifyHash);
+            $findUser->bind_result($foundUser, $foundPhone, $userFirstName, $userLastName, $hashedPassword, $enabled, $verifyHash);
             while ($findUser->fetch()) {
                 if ($foundUser) {
-                    $_SESSION["id"] = $foundUser;
                     return true;
                     break;
                 } else {
@@ -157,7 +156,7 @@
 
             Please click the link below to activate your account to start selling and buying on our marketplace:
 
-            http://localhost:4000/verify.php?email='.$email.'&hash='.$verifyHash.'
+            http://localhost:4000/code/marketplace-app/verify.php?email='.$email.'&hash='.$verifyHash.'
             
             ';
 

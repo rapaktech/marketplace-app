@@ -12,6 +12,8 @@
                 $id = $value;
             } if ($key == "firstname") {
                 $firstName = $value;
+            } if ($key == "lastname") {
+                $lastName = $value;
             } if ($key == "email") {
                 $email = $value;
             } if ($key == "phone") {
@@ -36,7 +38,20 @@
     $itemName = $itemDescription = $itemPrice = "";
 
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['logout']) == true) {
-        setcookie("jimmarketplaceuser", "", time() - 3600);
+        $_SESSION = array();
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', time()-3600,
+                $params["path"], $params["domain"],
+                $params["secure"], $params["httponly"]
+            );
+        }
+        session_destroy();
+        header("location: signup.php");
+    }
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['profile']) == true) {
+        header("location: profile.php");
     }
 
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit']) == true) {
@@ -102,11 +117,11 @@
     }
 
     function readUserItems () {
-        global $conn, $email, $findItems, $userItems;
+        global $conn, $id, $findItems, $userItems;
         $findItems->execute();
-        $findItems->bind_result($id, $name, $description, $price);
+        $findItems->bind_result($itemId, $name, $description, $price);
         while ($findItems->fetch()) {
-            $userItems[$id] = [$id, $name, $description, $price];
+            $userItems[$itemId] = [$itemId, $name, $description, $price];
         }
     }
 
@@ -150,8 +165,14 @@
 <body>
 
     <div class="logout" name="logout">
-        <form action="<?php echo htmlspecialchars("signup.php"); ?>" method="post">
+        <form action="" method="post">
             <input type="submit" name="logout" value="Logout Session">
+        </form>
+    </div>
+
+    <div class="profile" name="profile">
+        <form action="" method="post">
+            <input type="submit" name="profile" value="See Your Profile Information">
         </form>
     </div>
 

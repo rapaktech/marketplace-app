@@ -27,8 +27,21 @@ $createUser = $conn->prepare("INSERT INTO Users (user_firstname, user_lastname, 
     VALUES (?, ?, ?, ?, ?, ?)");
 $createUser->bind_param("ssssss", $firstName, $lastName, $email, $phone, $verifyHash, $hashedPassword);
 
-$findUser = $conn->prepare("SELECT user_num, user_firstname, user_password, user_enabled, user_verify_hash FROM Users WHERE user_email=?");
+$findUser = $conn->prepare("SELECT user_num, user_phone, user_firstname, user_lastname, user_password, user_enabled, user_verify_hash FROM Users WHERE user_email=?");
 $findUser->bind_param("s", $email);
+
+$createItem = $conn->prepare("INSERT INTO Items (item_name, item_description, item_price, item_creator_id, item_creator_phone) VALUES (?, ?, ?, ?, ?)");
+$createItem->bind_param("sssss", $itemName, $itemDescription, $itemPrice, $id, $phone);
+
+$findItems = $conn->prepare("SELECT item_id, item_name, item_description, item_price FROM Items WHERE item_creator_id=?");
+$findItems->bind_param("s", $id);
+
+$updateItem = $conn->prepare("UPDATE Items SET item_name=?, item_description=?, item_price=? WHERE item_id=?");
+$updateItem->bind_param("sssi", $updatedItemName, $updatedItemDescription, $updatedItemPrice, $itemId);
+
+$deleteItem = $conn->prepare("DELETE FROM Items WHERE item_id=?");
+$deleteItem->bind_param("i", $itemId);
+
 
 function resetPass($hashed, $uId) {
     global $conn;
@@ -38,7 +51,7 @@ function resetPass($hashed, $uId) {
         $resetPassword->bind_param("si", $hashed, $uId);
         $resetPassword->execute();
         $res = true;
-    } catch (PDOException $e) {
+    } catch (\Throwable $e) {
         $res = $e->getMessage();
     }
     return $res;
@@ -52,18 +65,25 @@ function verifyAndUpdate($e, $v) {
         $verifyUser = $conn->prepare("SELECT user_num, user_enabled FROM Users WHERE user_email=? AND user_verify_hash=?");
         $verifyUser->bind_param("ss", $e, $v);
 
-        $updateUser = $conn->prepare("UPDATE Users SET user_enabled='1' WHERE user_num=?");
-        $updateUser->bind_param("i", $id);
-
         $verifyUser->execute();
         $verifyUser->bind_result($foundVerifyUser, $userEnabled);
 
         while ($verifyUser->fetch()) {
             if ($foundVerifyUser && $userEnabled == '0') {
-                $id = $foundVerifyUser;
-                $sql = "UPDATE Users SET user_enabled='1' WHERE user_num=$id";
-                $result = $conn->query($sql);
-                $updateUser->execute();
+                try {
+                    $conn = new mysqli (servername, username, pass, dbname);
+
+                    if ($conn->connect_error) {
+                        $conn = new mysqli (servername, username, pass, dbname);
+                    }
+                    
+                    $updateUser = $conn->prepare("UPDATE Users SET user_enabled='1' WHERE user_num=?");
+                    $updateUser->bind_param("i", $foundVerifyUser);
+                    $updateUser->execute();
+                } catch (\Throwable $th) {
+                    return $res = $th->getMessage();
+                }
+                
                 $res = true;
                 return $res;
                 break;
@@ -75,22 +95,45 @@ function verifyAndUpdate($e, $v) {
                 continue;
             }
         }
-    } catch (PDOException $e) {
+    } catch (\Throwable $e) {
         $res = $e->getMessage();
     }
     return $res;
 }
 
 
-$createItem = $conn->prepare("INSERT INTO Items (item_name, item_description, item_price, item_creator_email, item_creator_phone) VALUES (?, ?, ?, ?, ?)");
-$createItem->bind_param("sssss", $itemName, $itemDescription, $itemPrice, $email, $phone);
+function updateLoggedInUser($id, $email, $firstName, $lastName, $phone) {
+    global $conn;
+    $res = false;
+    try {
+        $userId = intval($id);
+        
+        $conn = new mysqli (servername, username, pass, dbname);
 
-$findItems = $conn->prepare("SELECT item_id, item_name, item_description, item_price FROM Items WHERE item_creator_email=?");
-$findItems->bind_param("s", $email);
+        if ($conn->connect_error) {
+            $conn = new mysqli (servername, username, pass, dbname);
+        }
+        
+        $updateUser = $conn->prepare("UPDATE Users SET user_phone=?, user_firstname=?, user_lastname=?, user_email=? WHERE user_num=?");
+        $updateUser->bind_param("ssssi", $phone, $firstName, $lastName, $email, $userId);
+        $updateUser->execute();
 
-$updateItem = $conn->prepare("UPDATE Items SET item_name=?, item_description=?, item_price=? WHERE item_id=?");
-$updateItem->bind_param("sssi", $updatedItemName, $updatedItemDescription, $updatedItemPrice, $itemId);
 
-$deleteItem = $conn->prepare("DELETE FROM Items WHERE item_id=?");
-$deleteItem->bind_param("i", $itemId);
+        $conn = new mysqli (servername, username, pass, dbname);
+
+        if ($conn->connect_error) {
+            $conn = new mysqli (servername, username, pass, dbname);
+        }
+
+        $updateItem = $conn->prepare("UPDATE Items SET item_creator_phone=? WHERE item_creator_id=?");
+        $updateItem->bind_param("ss", $phone, $id);
+        $updateItem->execute();
+        
+        $res = true;
+    } catch (\Throwable $e) {
+        $res = $e->getMessage();
+    }
+    return $res;
+}
+
 ?>

@@ -64,15 +64,17 @@
             
 
             if (checkEmail() && $verify && $userEnabled == '1') {
-                setcookie("jimmarketplaceuser[id]", "$id");
-                setcookie("jimmarketplaceuser[firstname]", "$firstName");
-                setcookie("jimmarketplaceuser[email]", "$email");
+                setcookie("jimmarketplaceuser[id]", $id, time()+3600, "/", "localhost", false, false);
+                setcookie("jimmarketplaceuser[firstname]", $firstName, time()+3600, "/", "localhost", false, false);
+                setcookie("jimmarketplaceuser[lastname]", $lastName, time()+3600, "/", "localhost", false, false);
+                setcookie("jimmarketplaceuser[email]", $email, time()+3600, "/", "localhost", false, false);
+                setcookie("jimmarketplaceuser[phone]", $phone, time()+3600, "/", "localhost", false, false);
                 echo "<script>
                         window.setTimeout(function() {
                             window.location.href = 'dashboard.php';
                         }, 100);
                 </script>";
-            } else {
+            } else if ($userEnabled == '0') {
                 echo "<h3>You haven't verified your account. 
                 Please check your email inbox for a verification email</h3>";
             }
@@ -86,14 +88,16 @@
         }
 
         function checkEmail () {
-            global $conn, $email, $id, $firstName, $password, $verifyHash, $userEnabled, $hash, $findUser;
+            global $conn, $email, $id, $firstName, $lastName, $phone, $password, $verifyHash, $userEnabled, $hash, $findUser;
             $findUser->execute();
-            $findUser->bind_result($foundUser, $userFirstName, $hashedPassword, $enabled, $verifyHash);
+            $findUser->bind_result($foundUser, $foundPhone, $userFirstName, $userLastName, $hashedPassword, $enabled, $verifyHash);
             while ($findUser->fetch()) {
                 if ($foundUser) {
                     if ($foundUser && $enabled == '1') {
                         $id = $foundUser;
+                        $phone = $foundPhone;
                         $firstName = $userFirstName;
+                        $lastName = $userLastName;
                         $hash = $hashedPassword;
                         $userEnabled = $enabled;
                         return true;
