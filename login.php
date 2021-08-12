@@ -64,11 +64,11 @@
             
 
             if (checkEmail() && $verify && $userEnabled == '1') {
-                setcookie("jimmarketplaceuser[id]", $id, time()+3600, "/", "localhost", false, false);
-                setcookie("jimmarketplaceuser[firstname]", $firstName, time()+3600, "/", "localhost", false, false);
-                setcookie("jimmarketplaceuser[lastname]", $lastName, time()+3600, "/", "localhost", false, false);
-                setcookie("jimmarketplaceuser[email]", $email, time()+3600, "/", "localhost", false, false);
-                setcookie("jimmarketplaceuser[phone]", $phone, time()+3600, "/", "localhost", false, false);
+                setcookie("jimmarketplaceuser[id]", $id, time()+3600, "/", "localhost:4000", false, false);
+                setcookie("jimmarketplaceuser[firstname]", $firstName, time()+3600, "/", "localhost:4000", false, false);
+                setcookie("jimmarketplaceuser[lastname]", $lastName, time()+3600, "/", "localhost:4000", false, false);
+                setcookie("jimmarketplaceuser[email]", $email, time()+3600, "/", "localhost:4000", false, false);
+                setcookie("jimmarketplaceuser[phone]", $phone, time()+3600, "/", "localhost:4000", false, false);
                 echo "<script>
                         window.setTimeout(function() {
                             window.location.href = 'dashboard.php';
@@ -133,7 +133,7 @@
             Password: '.$password.'
 
 
-            Please click the link below to activate your account to start selling and buying on our marketplace:
+            Please click the link below to activate your account to start selling and buying on the marketplace:
 
             http://localhost:4000/code/marketplace-app/verify.php?email='.$email.'&hash='.$verifyHash.'
             

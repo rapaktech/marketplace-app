@@ -154,7 +154,7 @@
             Password: '.$verifiedPassword.'
 
 
-            Please click the link below to activate your account to start selling and buying on our marketplace:
+            Please click the link below to activate your account to start selling and buying on the marketplace:
 
             http://localhost:4000/code/marketplace-app/verify.php?email='.$email.'&hash='.$verifyHash.'
             

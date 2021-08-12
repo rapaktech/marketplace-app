@@ -63,11 +63,10 @@
             $result = updateLoggedInUser($id, $email, $firstName, $lastName, $phone);
             
             if ($result === true) {
-
-                setcookie("jimmarketplaceuser[firstname]", $firstName, time()+3600, "/", "localhost", false, false);
-                setcookie("jimmarketplaceuser[lastname]", $lastName, time()+3600, "/", "localhost", false, false);
-                setcookie("jimmarketplaceuser[email]", $email, time()+3600, "/", "localhost", false, false);
-                setcookie("jimmarketplaceuser[phone]", $phone, time()+3600, "/", "localhost", false, false);
+                setcookie("jimmarketplaceuser[firstname]", $firstName, time()+3600, "/", "localhost:4000", false, false);
+                setcookie("jimmarketplaceuser[lastname]", $lastName, time()+3600, "/", "localhost:4000", false, false);
+                setcookie("jimmarketplaceuser[email]", $email, time()+3600, "/", "localhost:4000", false, false);
+                setcookie("jimmarketplaceuser[phone]", $phone, time()+3600, "/", "localhost:4000", false, false);
                 header("location: dashboard.php");
                 echo "Update Is Successful";
             } else {
