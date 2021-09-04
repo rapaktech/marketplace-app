@@ -1,5 +1,9 @@
 <?php
     session_start();
+    $_SESSION["firstname"] = false;
+    $_SESSION["lastname"] = false;
+    $_SESSION["email"] = false;
+    $_SESSION["phone"] = false;
 ?>
 
 
@@ -31,91 +35,91 @@
         $id = $firstName = $lastName = $email = $phone = $password = $verify = $verifiedPassword = $hashedPassword = '';
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                if (!empty($_POST["signup-firstname"])) {
-                    $firstName = test_input($_POST["signup-firstname"]);
-                    // check if name only contains letters and whitespace
-                    if (!preg_match("/^[a-zA-Z-' ]*$/",$firstName)) {
-                        $firstErr = "Only letters and white space allowed";
-                    } else {
-                        $_SESSION["firstname"] = $firstName;
-                    }
+            if (!empty($_POST["signup-firstname"])) {
+                $firstName = test_input($_POST["signup-firstname"]);
+                // check if name only contains letters and whitespace
+                if (!preg_match("/^[a-zA-Z-' ]*$/",$firstName)) {
+                    $firstErr = "Only letters and white space allowed";
+                } else {
+                    $_SESSION["firstname"] = $firstName;
                 }
+            }
 
-                if (!empty($_POST["signup-lastname"])) {
-                    $lastName = test_input($_POST["signup-lastname"]);
-                    // check if last name only contains letters and whitespace
-                    if (!preg_match("/^[a-zA-Z-' ]*$/",$lastName)) {
-                        $lastErr = "Only letters and white space allowed";
-                    } else {
-                        $_SESSION["lastname"] = $lastName;
-                    }
+            if (!empty($_POST["signup-lastname"])) {
+                $lastName = test_input($_POST["signup-lastname"]);
+                // check if last name only contains letters and whitespace
+                if (!preg_match("/^[a-zA-Z-' ]*$/",$lastName)) {
+                    $lastErr = "Only letters and white space allowed";
+                } else {
+                    $_SESSION["lastname"] = $lastName;
                 }
+            }
 
-                if (!empty($_POST["signup-email"])) {
-                    $email = test_input($_POST["signup-email"]);
-                    // check if e-mail address is well-formed
-                    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                        $emailErr = "Invalid email format";
+            if (!empty($_POST["signup-email"])) {
+                $email = test_input($_POST["signup-email"]);
+                // check if e-mail address is well-formed
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    $emailErr = "Invalid email format";
+                } else {
+                    if (checkEmail()) {
+                        $email = false;
+                        $_SESSION["email"] = false;
+                        echo "This email has been used before. Please use another email, or sign in, or reset your password if you've forgotten it";
                     } else {
-                        if (checkEmail()) {
-                            $email = false;
-                            $_SESSION["email"] = false;
-                            echo "This email has been used before. Please use another email, or sign in, or reset your password if you've forgotten it";
-                        } else {
-                            $_SESSION["email"] = $email;
-                        }
+                        $_SESSION["email"] = $email;
                     }
                 }
+            }
 
-                if (!empty($_POST["signup-phone"])) {
-                    $phone = test_input($_POST["signup-phone"]);
-                    // check if phone only contains numbers and whitespace
-                    if (!preg_match("/^(?=.*\d)[\d]{8,}$/",$phone)) {
-                        $phoneErr = "Phone Number must be at least 8 characters and include only numbers";
+            if (!empty($_POST["signup-phone"])) {
+                $phone = test_input($_POST["signup-phone"]);
+                // check if phone only contains numbers and whitespace
+                if (!preg_match("/^(?=.*\d)[\d]{8,}$/",$phone)) {
+                    $phoneErr = "Phone Number must be at least 8 characters and include only numbers";
+                } else {
+                    $_SESSION["phone"] = $phone;
+                }
+            }
+        
+            if (!empty($_POST["signup-password"]) && !empty($_POST["verify-password"])) {
+                $password = test_input($_POST["signup-password"]);
+                $verify = test_input($_POST["verify-password"]);
+
+                // check if password only contains letters and whitespace
+                if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/", $password)) {
+                    $passwordErr = "Password must have at least one number, 
+                    one capital letter, one small letter, no special characters and must be at least 8 characters in total<br>";
+                } else {
+                    if ($password !== $verify) {
+                        $verifyErr = "Both password fields must be the same";
                     } else {
-                        $_SESSION["phone"] = $phone;
+                        $verifiedPassword = $password;
                     }
                 }
-            
-                if (!empty($_POST["signup-password"]) && !empty($_POST["verify-password"])) {
-                    $password = test_input($_POST["signup-password"]);
-                    $verify = test_input($_POST["verify-password"]);
+            }
 
-                    // check if password only contains letters and whitespace
-                    if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/", $password)) {
-                        $passwordErr = "Password must have at least one number, 
-                        one capital letter, one small letter, no special characters and must be at least 8 characters in total<br>";
+            if ($_SESSION["firstname"] && $_SESSION["lastname"] && $_SESSION["email"] && $_SESSION["phone"] && $verifiedPassword) {
+                /* Secure password hash. */
+                $hashedPassword = password_hash($verifiedPassword, PASSWORD_DEFAULT);
+                $verifyHash = md5(rand(0, 1000));
+                $createUser->execute();
+                checkEmail();
+                try {
+                    $sent = sendEmail();
+                } catch (\Throwable $th) {
+                    echo $th;
+                } finally {
+                    if ($sent) {
+                        echo "<h3>Your account has been created successfully. 
+                        Please go to your email inbox to verify your account<h3>";
                     } else {
-                        if ($password !== $verify) {
-                            $verifyErr = "Both password fields must be the same";
-                        } else {
-                            $verifiedPassword = $password;
-                        }
+                        echo "<h3>Your account has been created successfully, 
+                        but a verification email can't be sent to you at the moment.
+                        Please try to login <a href=\"login.php\">here</a> at some other time to get your verification email sent to 
+                        your email inbox<h3>";
                     }
                 }
-
-                if ($_SESSION["firstname"] && $_SESSION["lastname"] && $_SESSION["email"] && $_SESSION["phone"] && $verifiedPassword) {
-                    /* Secure password hash. */
-                    $hashedPassword = password_hash($verifiedPassword, PASSWORD_DEFAULT);
-                    $verifyHash = md5(rand(0, 1000));
-                    $createUser->execute();
-                    checkEmail();
-                    try {
-                        $sent = sendEmail();
-                    } catch (\Throwable $th) {
-                        echo $th;
-                    } finally {
-                        if ($sent) {
-                            echo "<h3>Your account has been created successfully. 
-                            Please go to your email inbox to verify your account<h3>";
-                        } else {
-                            echo "<h3>Your account has been created successfully, 
-                            but a verification email can't be sent to you at the moment.
-                            Please try to login <a href=\"login.php\">here</a> at some other time to get your verification email sent to 
-                            your email inbox<h3>";
-                        }
-                    }
-                }
+            }
         }
     
         function test_input($data) {

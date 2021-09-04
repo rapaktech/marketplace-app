@@ -30,10 +30,10 @@ $createUser->bind_param("ssssss", $firstName, $lastName, $email, $phone, $verify
 $findUser = $conn->prepare("SELECT user_num, user_phone, user_firstname, user_lastname, user_password, user_enabled, user_verify_hash FROM Users WHERE user_email=?");
 $findUser->bind_param("s", $email);
 
-$createItem = $conn->prepare("INSERT INTO Items (item_name, item_description, item_price, item_creator_id, item_creator_phone) VALUES (?, ?, ?, ?, ?)");
-$createItem->bind_param("sssss", $itemName, $itemDescription, $itemPrice, $id, $phone);
+$createItem = $conn->prepare("INSERT INTO Items (item_name, item_description, item_price, item_creator_id, item_creator_phone, item_image) VALUES (?, ?, ?, ?, ?, ?)");
+$createItem->bind_param("ssssss", $itemName, $itemDescription, $itemPrice, $id, $phone, $itemImageFileName);
 
-$findItems = $conn->prepare("SELECT item_id, item_name, item_description, item_price FROM Items WHERE item_creator_id=?");
+$findItems = $conn->prepare("SELECT item_id, item_name, item_description, item_price, item_image FROM Items WHERE item_creator_id=?");
 $findItems->bind_param("s", $id);
 
 $updateItem = $conn->prepare("UPDATE Items SET item_name=?, item_description=?, item_price=? WHERE item_id=?");
@@ -102,7 +102,7 @@ function verifyAndUpdate($e, $v) {
 }
 
 
-function updateLoggedInUser($id, $email, $firstName, $lastName, $phone) {
+function updateLoggedInUser($id, $firstName, $lastName, $phone) {
     global $conn;
     $res = false;
     try {
@@ -114,8 +114,8 @@ function updateLoggedInUser($id, $email, $firstName, $lastName, $phone) {
             $conn = new mysqli (servername, username, pass, dbname);
         }
         
-        $updateUser = $conn->prepare("UPDATE Users SET user_phone=?, user_firstname=?, user_lastname=?, user_email=? WHERE user_num=?");
-        $updateUser->bind_param("ssssi", $phone, $firstName, $lastName, $email, $userId);
+        $updateUser = $conn->prepare("UPDATE Users SET user_phone=?, user_firstname=?, user_lastname=?, WHERE user_num=?");
+        $updateUser->bind_param("sssi", $phone, $firstName, $lastName, $userId);
         $updateUser->execute();
 
 

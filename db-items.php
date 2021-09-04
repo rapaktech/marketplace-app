@@ -32,6 +32,7 @@
         item_price INT (16) NOT NULL,
         item_creator_id VARCHAR (1) NOT NULL,
         item_creator_phone VARCHAR (255) NOT NULL,
+        item_image VARCHAR (1000) NOT NULL,
         item_time_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         item_last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     )";

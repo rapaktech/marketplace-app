@@ -28,17 +28,6 @@
             }
         }
 
-        if (!empty($_POST["email"])) {
-            $testEmail = test_input($_POST["email"]);
-            // check if e-mail address is well-formed
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $email = false;
-                echo "Invalid email format. Please check and try again.<br>";
-            } else {
-                $email = $testEmail;
-            }
-        }
-
         if (!empty($_POST["phone"])) {
             $testPhone = test_input($_POST["phone"]);
             if (!preg_match("/^(?=.*\d)[\d]{8,}$/",$phone)) {
@@ -49,7 +38,7 @@
             }
         }
 
-        if ($firstName && $lastName && $email && $phone) {
+        if ($firstName && $lastName && $phone) {
             require "db-conn.php";
 
             foreach ($_COOKIE["jimmarketplaceuser"] as $key => $value) {
@@ -60,12 +49,12 @@
                 }
             }
 
-            $result = updateLoggedInUser($id, $email, $firstName, $lastName, $phone);
+            $result = updateLoggedInUser($id, $firstName, $lastName, $phone);
             
             if ($result === true) {
+                setcookie("jimmarketplaceuser[id]", $id, time()+3600, "/", "localhost:4000", false, false);
                 setcookie("jimmarketplaceuser[firstname]", $firstName, time()+3600, "/", "localhost:4000", false, false);
                 setcookie("jimmarketplaceuser[lastname]", $lastName, time()+3600, "/", "localhost:4000", false, false);
-                setcookie("jimmarketplaceuser[email]", $email, time()+3600, "/", "localhost:4000", false, false);
                 setcookie("jimmarketplaceuser[phone]", $phone, time()+3600, "/", "localhost:4000", false, false);
                 header("location: dashboard.php");
                 echo "Update Is Successful";

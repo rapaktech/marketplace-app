@@ -65,12 +65,20 @@
             $itemName = test_input($_POST["item-name"]);
             $itemDescription = test_input($_POST["item-description"]);
             $itemPrice = test_input($_POST["item-price"]);
-            $createItem->execute();
-            echo "<script>
-                        window.setTimeout(function() {
-                            window.location.href = 'dashboard.php';
-                        }, 100);
-            </script>";
+            $itemImage = uploadImage();
+            if ($itemImage === false) {
+                echo "Image Upload failed. Please try again";
+            } else {
+                $itemImageFileName = $itemImage;
+                $result = $createItem->execute();
+                if ($result)
+                echo "<script>
+                            window.setTimeout(function() {
+                                window.location.href = 'dashboard.php';
+                            }, 100);
+                </script>";
+                else echo "Item creation failed. Please try again";
+            }
         }
     }
 
@@ -119,25 +127,79 @@
     function readUserItems () {
         global $conn, $id, $findItems, $userItems;
         $findItems->execute();
-        $findItems->bind_result($itemId, $name, $description, $price);
+        $findItems->bind_result($itemId, $name, $description, $price, $image);
         while ($findItems->fetch()) {
-            $userItems[$itemId] = [$itemId, $name, $description, $price];
+            $userItems[$itemId] = [$itemId, $name, $description, $price, $image];
         }
     }
 
     function readAllItems () {
         global $allItems, $conn;
-        $sql = "SELECT item_id, item_name, item_description, item_price, item_creator_phone FROM Items";
+        $sql = "SELECT item_id, item_name, item_description, item_price, item_creator_phone, item_image FROM Items";
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $allItems[$row["item_id"]] = [$row["item_id"], $row["item_name"], $row["item_description"], $row["item_price"], $row["item_creator_phone"]];
+                $allItems[$row["item_id"]] = [$row["item_id"], $row["item_name"], $row["item_description"], $row["item_price"], $row["item_creator_phone"], $row["item_image"]];
             }
             return true;
         } else {
             return false;
         }
+    }
+
+    function uploadImage () {
+        require('guid-generator.php');
+
+        $target_dir = "uploads/";
+
+        $guid = strtolower(GuidGenerator::create());
+        
+        $target_file = $target_dir . $guid;
+
+        $uploadOk = 1;
+
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+
+
+        // Check if image file is actual image
+        if (isset($_POST["submit"])) {
+            $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+            if ($check !== false) {
+                $uploadOk = 1;
+            } else {
+                $uploadOk = 0;
+                echo "File is not an image.<br>";
+            }
+        }
+
+
+        // Check if file already exists
+        if (file_exists($target_file)) {
+            $uploadOk = 0;
+            echo "Sorry, file already exists.<br>";
+        }
+
+
+        // Check file size
+        if ($_FILES["fileToUpload"]["size"] > 1024000) {
+            $uploadOk = 0;
+            echo "Image must be smaller than 1MB<br>";
+        }
+
+
+        // Check if $uploadOk is set to 0 by an error
+        if ($uploadOk == 0) {
+            echo "Sorry, your file was not uploaded.<br>";
+        } else {
+            if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+                return $target_file;
+            } else {
+                return false;
+            }
+        }
+        return false;
     }
 ?>
 
@@ -177,14 +239,15 @@
     </div>
 
     <div class="add-item" name="add-item">
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
             <h4>Add New Item To List:<h4> <input type="text" name="item-name" value="" placeholder="Item Name" required>
             <span class="error">* <?php echo $itemNameErr; ?></span><br><br>
             <input type="text" name="item-description" value="" placeholder="Describe Item" required>
             <span class="error">* <?php echo $itemDescriptionErr; ?></span><br><br>
             <input type="number" name="item-price" value="" placeholder="Price" required>
             <span class="error">* <?php echo $itemPriceErr; ?></span><br><br>
-            <input type="submit" name="submit" value="Add Item">
+            <input type="file" name="fileToUpload" id="fileToUpload" placeholder="Select Item Image" required><br><br>
+            <input type="submit" name="submit" value="Add Item"><br><br>
         </form>
     </div>
 
@@ -194,7 +257,10 @@
             <?php 
                 if (empty($userItems) == FALSE) {
                     foreach ($userItems as $key => $value) {
-                        echo "<input type=\"radio\" name=\"radio\" id=\"{$value[1]}\" value=\"{$key}\" placeholder=\"{$value[2]}\" size=\"{$value[3]}\" onclick=\"handleClick(this);\"> <b>{$value[1]}</b>  <span name=\"{$value[2]}\">   - {$value[2]}</span> <span name=\"{$value[3]}\">   - {$value[3]}</span>  <br><br>";
+                        echo "<input type=\"radio\" name=\"radio\" id=\"{$value[1]}\" value=\"{$key}\" placeholder=\"{$value[2]}\" 
+                        size=\"{$value[3]}\" onclick=\"handleClick(this);\"> <b>{$value[1]}</b>  
+                        <span name=\"{$value[2]}\">   - {$value[2]}</span> <span name=\"{$value[3]}\">   - {$value[3]}</span>  <br><br>";
+                        echo "<img src=\"{$value[4]}\" width=\"200px\" height=\"200px\" alt=\"{$value[1]}\">";
                     }
                 } else {
                     echo "No items added yet";
@@ -215,7 +281,8 @@
                         echo "<li><h4 name=\"{$value[1]}\">{$value[1]}</h4>
                         <span name=\"{$value[2]}\">   - {$value[2]}</span>
                         <span name=\"{$value[3]}\">   - {$value[3]}</span>
-                        <span name=\"{$value[4]}\">   - {$value[4]}</span></li>";
+                        <span name=\"{$value[4]}\">   - {$value[4]}</span>
+                        <img src=\"{$value[5]}\" width=\"200px\" height=\"200px\" alt=\"{$value[1]}\"></li>";
                     }
                 } else {
                     echo "No items added yet";
