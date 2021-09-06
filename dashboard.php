@@ -46,8 +46,12 @@
                 $params["secure"], $params["httponly"]
             );
         }
+        setcookie("jimmarketplaceuser[id]", '', time()-3600, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
+        setcookie("jimmarketplaceuser[firstname]", '', time()-3600, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
+        setcookie("jimmarketplaceuser[lastname]", '', time()-3600, $params["path"], $params["domain"],$params["secure"], $params["httponly"]);
+        setcookie("jimmarketplaceuser[phone]", '', time()-3600, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
         session_destroy();
-        header("location: signup.php");
+        header("location: index.html");
     }
 
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['profile']) == true) {
