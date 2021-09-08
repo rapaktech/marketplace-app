@@ -154,6 +154,7 @@
 
     function uploadImage () {
         require('guid-generator.php');
+        require('config.php');
 
         $target_dir = "uploads/";
 
@@ -198,7 +199,11 @@
             echo "Sorry, your file was not uploaded.<br>";
         } else {
             if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-                return $target_file;
+                $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+                $cloudinary->uploadApi()->upload($target_file,
+                ["public_id" => $guid]);
+
+                return "https://res.cloudinary.com/jim-marketplace/image/upload/v1631099913/item_images/$guid.$imageFileType";
             } else {
                 return false;
             }
