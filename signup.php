@@ -160,7 +160,7 @@
 
             Please click the link below to activate your account to start selling and buying on the marketplace:
 
-            http://localhost:4000/code/marketplace-app/verify.php?email='.$email.'&hash='.$verifyHash.'
+            https://jim-marketplace.000webhostapp.com/verify.php?email='.$email.'&hash='.$verifyHash.'
             
             ';
 
